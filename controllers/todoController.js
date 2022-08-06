@@ -1,4 +1,4 @@
-const TodoModel = require('../models/model');
+const TodoModel = require('../models/todoModel');
 
 
 //Post Method
