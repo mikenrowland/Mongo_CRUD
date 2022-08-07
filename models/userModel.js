@@ -36,6 +36,14 @@ const userSchema = new mongoose.Schema(
   { timestamps: true }
 );
 
-const User = mongoose.model('User', userSchema);
 
-module.exports = User;
+const tokenSchema = new mongoose.Schema({
+  token: {
+    type: String,
+  }
+})
+
+const User = mongoose.model('User', userSchema);
+const InvalidToken = mongoose.model('InvalidToken', tokenSchema);
+
+module.exports = {User, InvalidToken};

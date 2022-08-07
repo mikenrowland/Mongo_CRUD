@@ -28,5 +28,7 @@ userRouter.put("/auth/reset-password/:token", [
     validatePassword,
     check("confirmPassword", "Field `confirmPassword` is required").exists()
     ], controller.resetPassword);
+userRouter.get("/auth/logout", controller.logoutUser);
+
 
 module.exports = userRouter;

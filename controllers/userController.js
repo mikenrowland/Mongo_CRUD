@@ -1,4 +1,4 @@
-const User = require('../models/userModel');
+const { User, InvalidToken } = require('../models/userModel');
 const { generateOTP,
         hashPassword, 
         verifyEmailTemplate,
@@ -27,7 +27,7 @@ const registerUser = async (req, res) => {
         user.save().then((result) => {
         const params = { 
             email: result.email,
-            template: verifyEmailTemplate(token),
+            template: verifyEmailTemplate(result.otp),
             subject: `Welcome to Mykie's CRUD API`
         };
         
@@ -93,6 +93,21 @@ const loginUser = async (req, res) => {
         res.status(500).send('Server Error! Login unsuccessful');
     }  
 };
+
+
+const logoutUser = async (req, res) => {
+    const token = req.header('Authorization');
+    try {
+        await InvalidToken.create({token: token});
+        return res.status(200).json({
+            message: 'User successfully logged out'
+        })
+    } catch (err) {
+        console.log(err.message);
+        console.error(err.message);
+        res.status(500).send('Server Error!');
+    }
+}
 
 
 const verifyUser = async (req, res) => {
@@ -211,7 +226,7 @@ const setRoles = async (req, res) => {
     if (!errors.isEmpty()) {
         return res.status(400).json({ message: errors.array() });
     }
-    
+
     const { email, role } = req.body;
     let enumValues = [ 'user', 'staff', 'manager', 'admin' ];
     if (!enumValues.includes(role)) {
@@ -250,6 +265,7 @@ module.exports = {
     forgotPassword,
     registerUser,
     loginUser,
+    logoutUser,
     verifyUser,
     setRoles
 };

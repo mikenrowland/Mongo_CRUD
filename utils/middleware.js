@@ -1,6 +1,6 @@
 const jwt = require('jsonwebtoken');
 const nodemailer = require('nodemailer');
-const User = require('../models/userModel');
+const { User, InvalidToken } = require('../models/userModel');
 const { check } = require('express-validator');
 const { SMTP_SETTINGS } = require('../utils/security');
 require('dotenv').config();
@@ -20,15 +20,22 @@ const auth = async (req, res, next) => {
     }
 
     try {
+        const invalidToks = await InvalidToken.findOne({token: token});
+        if (invalidToks) {
+          return res.status(401).json({
+            message: "Access denied! Please login"
+          });
+        }
         decodeJWT = jwt.verify(token, SECRET);
         const user = await User.findById({_id: decodeJWT.id}).select('-password');
         // const user = decodeJWT.user
         req.user = user;
 
         next();
-    } catch (error) {
+    } catch (err) {
+        console.log(err),
         res.status(401).json({
-            message: "Invalid token! Access denied"
+          message: "Invalid token! Access denied"
         });
     }
 }
@@ -45,9 +52,7 @@ const adminAuth = async (req, res, next) => {
 
     try {
         decodeJWT = jwt.verify(token, SECRET);
-        console.log(decodeJWT);
         const user = await User.findById({_id: decodeJWT.id}).select('-password');
-        console.log(user);
         if (user.roles != 'admin'){
             return res.status(401).json({
                 message: "Admin access required"
@@ -57,6 +62,7 @@ const adminAuth = async (req, res, next) => {
 
         next();
     } catch (error) {
+        console.log(err),
         res.status(401).json({
             message: "Invalid token! Access denied"
         });
