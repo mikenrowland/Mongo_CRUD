@@ -111,6 +111,10 @@ const logoutUser = async (req, res) => {
 
 
 const verifyUser = async (req, res) => {
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+        return res.status(400).json({ message: errors.array() });
+    }
     const {email, otp} = req.body;
 
     try {
@@ -163,7 +167,6 @@ const forgotPassword = async (req, res) => {
         if (sendEmail(params)) {
             return res.status(200).json({
                 message: `Password reset link sent to ${email}`,
-                token
             });
         }
     } catch (err) {
@@ -208,8 +211,7 @@ const resetPassword = async (req, res) => {
         user.save().then((result) => {
             if (result) {
                 return res.status(200).json({
-                    message: 'Password reset successful',
-                    data: user
+                    message: 'Password reset successful'
                 });
             }
         })

@@ -23,19 +23,19 @@ SMTP_SETTINGS = {
 };
 
 // OTP generator
-generateOTP = () => {
+const generateOTP = () => {
     const OTP = otpGenerator.generate(6, OTP_OPTIONS);
     return OTP;
   };
 
 // Password hashing
-hashPassword = (password) => {
+const hashPassword = (password) => {
     let salt = bcrypt.genSaltSync(10);
     hashedPassword = bcrypt.hashSync(password, salt);
     return hashedPassword;
 }
 
-verifyEmailTemplate = (token) => {
+const verifyEmailTemplate = (token) => {
     let template = `
         <div
             class="container"
@@ -51,7 +51,7 @@ verifyEmailTemplate = (token) => {
     return template;
 }
 
-passwordResetTemplate = (token) => {
+const passwordResetTemplate = (token) => {
     let template = `
         <div
             class="container"
