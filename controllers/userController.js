@@ -1,8 +1,10 @@
 const { User, InvalidToken } = require('../models/userModel');
-const { generateOTP,
-        hashPassword, 
-        verifyEmailTemplate,
-        passwordResetTemplate,
+const { 
+    decodeJWT,
+    generateOTP,
+    hashPassword, 
+    verifyEmailTemplate,
+    passwordResetTemplate,
     } = require('../utils/security');
 const { sendEmail } = require('../utils/middleware');
 const { validationResult } = require('express-validator');
@@ -47,9 +49,11 @@ const registerUser = async (req, res) => {
         });
         });
     } catch (err) {
-        console.log(err.message);
-        console.error(err.message);
-        res.status(500).send('Server Error! Registration unsuccessful');
+        console.log(err);
+        console.error(err);
+        res.status(500).send({
+            message: 'Server Error! Registration unsuccessful'
+        });
     }
 };
 
@@ -87,9 +91,11 @@ const loginUser = async (req, res) => {
                 message: 'Login successful'
             }); 
     } catch (err) {
-        console.log(err.message);
-        console.error(err.message);
-        res.status(500).send('Server Error! Login unsuccessful');
+        console.log(err);
+        console.error(err);
+        res.status(500).send({
+            message: 'Server Error! Login unsuccessful'
+        });
     }  
 };
 
@@ -102,9 +108,11 @@ const logoutUser = async (req, res) => {
             message: 'User successfully logged out'
         })
     } catch (err) {
-        console.log(err.message);
-        console.error(err.message);
-        res.status(500).send('Server Error!');
+        console.log(err);
+        console.error(err);
+        res.status(500).send({
+            message: 'Server Error!'
+        });
     }
 }
 
@@ -135,9 +143,11 @@ const verifyUser = async (req, res) => {
             user_verified: user.emailVerified
         })
     } catch (err) {
-        console.log(err.message);
-        console.error(err.message);
-        res.status(500).send('Server Error! Verification failed');
+        console.log(err);
+        console.error(err);
+        res.status(500).send({
+            message: 'Server Error! Verification failed'
+        });
     }
 }
 
@@ -169,9 +179,11 @@ const forgotPassword = async (req, res) => {
             });
         }
     } catch (err) {
-        console.log(err.message);
-        console.error(err.message);
-        res.status(500).send('Server Error! Link not sent');
+        console.log(err);
+        console.error(err);
+        res.status(500).send({
+            message:'Server Error! Link not sent'
+        });
     }
 }
 
@@ -190,17 +202,14 @@ const resetPassword = async (req, res) => {
         });
     }
 
-    try {
-        decodeJWT = jwt.verify(token, SECRET);
-        console.log(decodeJWT);
-    } catch (err) {
-        console.log(err);
+    tokenData = decodeJWT(token);
+    if (!tokenData[0]){
         return res.status(401).json({
-            message: 'Token invalid or expired'
+        message: 'Token invalid or expired'
         });
     }
     try {
-        const user = await User.findById({_id: decodeJWT.id});
+        const user = await User.findById({ _id: tokenData[1].id });
         if (!user){
             return res.status(400).json({
                 message: 'User not found'
@@ -215,9 +224,11 @@ const resetPassword = async (req, res) => {
             }
         })
     } catch (err) {
-        console.log(err.message);
-        console.error(err.message);
-        res.status(500).send('Server Error! Password reset failed');
+        console.log(err);
+        console.error(err);
+        res.status(500).send({
+            message: 'Server Error! Password reset failed'
+        });
     }
 }
 
@@ -255,9 +266,11 @@ const setRoles = async (req, res) => {
             }
         })
     } catch (err) {
-        console.log(err.message);
-        console.error(err.message);
-        res.status(500).send('Server Error! Role not set');
+        console.log(err);
+        console.error(err);
+        res.status(500).send({
+            message:'Server Error! Role not set'
+        });
     }
 }
 

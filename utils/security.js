@@ -1,6 +1,7 @@
 const bcrypt = require('bcryptjs');
-const { verify } = require('jsonwebtoken');
+const jwt = require('jsonwebtoken');
 const otpGenerator = require('otp-generator');
+const SECRET = process.env.TOKEN_SECRET
 
 OTP_OPTIONS = { 
     upperCaseAlphabets: true,
@@ -34,6 +35,18 @@ const hashPassword = (password) => {
     hashedPassword = bcrypt.hashSync(password, salt);
     return hashedPassword;
 }
+
+
+const decodeJWT = (token) => {
+    try {
+        tokenData = jwt.verify(token, SECRET);
+        return [true, tokenData]
+    } catch (err) {
+        console.log(err);
+        return [false, null]
+    };
+}
+
 
 const verifyEmailTemplate = (token) => {
     let template = `
@@ -70,6 +83,7 @@ const passwordResetTemplate = (token) => {
 module.exports = {
     generateOTP,
     hashPassword,
+    decodeJWT,
     SMTP_SETTINGS,
     verifyEmailTemplate,
     passwordResetTemplate,
