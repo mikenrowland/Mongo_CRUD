@@ -43,7 +43,6 @@ const registerUser = async (req, res) => {
             email: result.email,
             verified: result.emailVerified,
             created_at: result.createdAt,
-            otp: result.otp,
             },
         });
         });
