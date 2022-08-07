@@ -166,7 +166,7 @@ const forgotPassword = async (req, res) => {
                 message: 'User not found'
             });
         }
-        const token = jwt.sign({ id: user._id }, SECRET, { expiresIn: "5m"});
+        const token = jwt.sign({ id: user._id }, SECRET, { expiresIn: "10m"});
         const params = { 
             email: email,
             template: passwordResetTemplate(token),

@@ -1,7 +1,7 @@
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const otpGenerator = require('otp-generator');
-const SECRET = process.env.TOKEN_SECRET
+const SECRET = process.env.SECRET_KEY
 
 OTP_OPTIONS = { 
     upperCaseAlphabets: true,
