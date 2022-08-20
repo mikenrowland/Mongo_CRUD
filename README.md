@@ -35,7 +35,7 @@ Some user and todo routes such as `setRoles`, `createTodo`, `updateTodo`, and `d
 
 ### Logout User
 
-![Snapshot of testClient](./images/logoutUser.png.png)
+![Snapshot of testClient](./images/logoutUser.png)
 
 ### Password Recovery Mail
 
