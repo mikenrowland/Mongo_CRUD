@@ -20,14 +20,33 @@ Some user and todo routes such as `setRoles`, `createTodo`, `updateTodo`, and `d
 
 ## Screenshots
 
+### Register User
+
+![Snapshot of testClient](./images/RegisterUser.png)
+
 ### Verify User using OTP
 
 ![Snapshot of mail received](./images/verifyUser.png)
+![Snapshot of testClient](./images/otpVerification.png)
+
+### Login User
+
+![Snapshot of testClient](./images/loginUser.png)
+
+### Logout User
+
+![Snapshot of testClient](./images/logoutUser.png.png)
 
 ### Password Recovery Mail
 
 ![Snapshot of mail received](./images/recoverPass.png)
 
-### Admin Protected Route
+### Admin Protected Routes
 
 ![Snapshot of testClient](./images/adminRoute.png)
+![Snapshot of testClient](./images/managerRoute.png)
+
+
+### Auth Protected Route
+
+![Snapshot of testClient](./images/authProtected.png)

@@ -41,6 +41,35 @@ const auth = async (req, res, next) => {
 }
 
 
+const managerAuth = async (req, res, next) => {
+  const token = req.header('Authorization');
+
+  if (!token){
+      return res.status(401).json({
+          message: "No token found! Access denied"
+      });
+  }
+
+  try {
+      decodeJWT = jwt.verify(token, SECRET);
+      const user = await User.findById({_id: decodeJWT.id}).select('-password');
+      if (user.roles != 'admin' || user.roles != 'manager'){
+          return res.status(401).json({
+              message: "Manager or Admin access required"
+          })
+      }
+      req.user = user;
+
+      next();
+  } catch (error) {
+      console.log(err),
+      res.status(401).json({
+          message: "Invalid token! Access denied"
+      });
+  }
+}
+
+
 const adminAuth = async (req, res, next) => {
     const token = req.header('Authorization');
 
@@ -117,6 +146,7 @@ const sendEmail = async (params) => {
     auth,
     adminAuth,
     sendEmail,
+    managerAuth,
     validateEmail,
     validatePassword,
   };
