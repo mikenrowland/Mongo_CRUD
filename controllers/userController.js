@@ -102,7 +102,18 @@ const loginUser = async (req, res) => {
 
 const logoutUser = async (req, res) => {
     const token = req.header('Authorization');
+    if (!token){
+        return res.status(404).json({
+            message: 'No token found. User not logged in'
+        })
+    }
     try {
+        const tokenExists = await InvalidToken.findOne({token: token});
+        if (tokenExists){
+            return res.status(403).json({
+                message: 'User is already logged out'
+            })
+        }
         await InvalidToken.create({token: token});
         return res.status(200).json({
             message: 'User successfully logged out'
